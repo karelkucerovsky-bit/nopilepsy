@@ -6,7 +6,8 @@ let package = Package(
     name: "NopiCore",
     platforms: [
         .iOS(.v17),
-        .watchOS(.v10)
+        .watchOS(.v10),
+        .macOS(.v14)
     ],
     products: [
         .library(name: "NopiCore", targets: ["NopiCore"])
