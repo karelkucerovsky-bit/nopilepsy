@@ -1,0 +1,135 @@
+name: Nopilepsy
+options:
+  bundleIdPrefix: com.nopilepsy
+  deploymentTarget:
+    iOS: "17.0"
+    watchOS: "10.0"
+  xcodeVersion: "15.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+
+packages:
+  NopiCore:
+    path: NopiCore
+
+targets:
+  # ── iPhone App ──
+  Nopilepsy:
+    type: application
+    platform: iOS
+    sources:
+      - path: Nopilepsy
+        excludes:
+          - "**/.DS_Store"
+    dependencies:
+      - package: NopiCore
+      - sdk: HealthKit.framework
+      - sdk: WatchConnectivity.framework
+    settings:
+      base:
+        INFOPLIST_FILE: Nopilepsy/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Nopilepsy/Nopilepsy.entitlements
+        PRODUCT_BUNDLE_IDENTIFIER: com.nopilepsy.app
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "5.9"
+        DEVELOPMENT_TEAM: ""
+        CODE_SIGN_STYLE: Automatic
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "1,2"
+    info:
+      path: Nopilepsy/Info.plist
+      properties:
+        CFBundleDisplayName: Nopilepsy
+        NSHealthShareUsageDescription: "Nopilepsy reads your health data (sleep, heart rate, HRV, blood oxygen, temperature, activity) to calculate a research-backed seizure risk assessment. All data stays on your device."
+        UILaunchScreen: {}
+
+  # ── Watch App ──
+  NopiWatch:
+    type: application
+    platform: watchOS
+    sources:
+      - path: NopiWatch
+        excludes:
+          - "**/.DS_Store"
+          - Complications/
+    dependencies:
+      - package: NopiCore
+      - sdk: HealthKit.framework
+      - sdk: WatchConnectivity.framework
+    settings:
+      base:
+        INFOPLIST_FILE: NopiWatch/Info.plist
+        CODE_SIGN_ENTITLEMENTS: NopiWatch/NopiWatch.entitlements
+        PRODUCT_BUNDLE_IDENTIFIER: com.nopilepsy.app.watchkitapp
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "5.9"
+        DEVELOPMENT_TEAM: ""
+        CODE_SIGN_STYLE: Automatic
+        WATCHOS_DEPLOYMENT_TARGET: "10.0"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    info:
+      path: NopiWatch/Info.plist
+      properties:
+        CFBundleDisplayName: Nopilepsy
+        NSHealthShareUsageDescription: "Nopilepsy reads your health data (sleep, heart rate, HRV, blood oxygen, temperature, activity) to calculate a research-backed seizure risk assessment. All data stays on your device."
+        WKApplication: true
+        WKCompanionAppBundleIdentifier: com.nopilepsy.app
+
+  # ── Watch Complication Widget Extension ──
+  NopiComplication:
+    type: watchkit2-extension
+    platform: watchOS
+    sources:
+      - path: NopiWatch/Complications
+        excludes:
+          - "**/.DS_Store"
+    dependencies:
+      - package: NopiCore
+      - sdk: WidgetKit.framework
+      - sdk: SwiftUI.framework
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.nopilepsy.app.watchkitapp.complication
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "5.9"
+        DEVELOPMENT_TEAM: ""
+        CODE_SIGN_STYLE: Automatic
+        WATCHOS_DEPLOYMENT_TARGET: "10.0"
+
+  # ── Unit Tests ──
+  NopiCoreTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: NopiCore/Tests/NopiCoreTests
+        excludes:
+          - "**/.DS_Store"
+    dependencies:
+      - package: NopiCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.nopilepsy.nopicoreTests
+        SWIFT_VERSION: "5.9"
+
+schemes:
+  Nopilepsy:
+    build:
+      targets:
+        Nopilepsy: all
+        NopiWatch: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - NopiCoreTests
+
+  NopiWatch:
+    build:
+      targets:
+        NopiWatch: all
+    run:
+      config: Debug

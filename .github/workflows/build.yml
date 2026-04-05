@@ -1,0 +1,76 @@
+name: Build Nopilepsy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: macos-14
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode 15
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode Project
+        run: xcodegen generate
+
+      - name: Build NopiCore Package
+        run: |
+          cd NopiCore
+          swift build
+
+      - name: Build iPhone App (Simulator)
+        run: |
+          xcodebuild build \
+            -project Nopilepsy.xcodeproj \
+            -scheme Nopilepsy \
+            -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=latest' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            | tail -20
+
+      - name: Build Watch App (Simulator)
+        run: |
+          xcodebuild build \
+            -project Nopilepsy.xcodeproj \
+            -scheme NopiWatch \
+            -destination 'platform=watchOS Simulator,name=Apple Watch Series 9 (45mm),OS=latest' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            | tail -20
+
+      - name: Run Unit Tests
+        run: |
+          xcodebuild test \
+            -project Nopilepsy.xcodeproj \
+            -scheme Nopilepsy \
+            -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=latest' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            | tail -30
+
+  package-tests:
+    runs-on: macos-14
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode 15
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
+
+      - name: Run NopiCore Tests
+        run: |
+          cd NopiCore
+          swift test
