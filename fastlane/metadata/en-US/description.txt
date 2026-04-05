@@ -1,0 +1,17 @@
+Passive seizure risk monitoring for Apple Watch and iPhone.
+
+Nopilepsy reads your health sensors and shows one number — your current seizure risk level. Tap to see which factors contribute most. All processing happens on your device.
+
+FEATURES
+- 9-factor risk engine: sleep, HRV, heart rate, SpO2, temperature, activity, ECG, stress, medication adherence
+- Personal baseline learning that adapts to your patterns over 14 days
+- Research-backed: every risk factor weight links to published neurology studies
+- Medication dose tracking with adherence scoring
+- Full risk history with trend visualization
+- PDF and CSV export for neurologist appointments
+
+PRIVACY
+All health data stays on your device. No accounts. No cloud. No analytics. No tracking. Zero data collection. Open source under MIT license — verify every line yourself at github.com/karelkucerovsky-bit/nopilepsy.
+
+IMPORTANT
+Nopilepsy is not a medical device. Risk assessments are informational only, based on published research correlations. Always consult your neurologist for medical decisions.

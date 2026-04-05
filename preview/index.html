@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nopilepsy — App Store Preview</title>
+<style>
+  /* ══════════════════════════════════════════
+     MODULE 1: DESIGN TOKENS
+     ══════════════════════════════════════════ */
+  :root {
+    --bg: #0A0A0F;
+    --surface: #141418;
+    --surface-el: #1E1E24;
+    --text1: #F5F5F7;
+    --text2: #8E8E93;
+    --text3: #48484A;
+    --accent: #2DD4BF;
+
+    --mint: #2DD4BF;
+    --honey: #FDE68A;
+    --peach: #FDBA74;
+    --blush: #FCA5A5;
+
+    --mint-bg: rgba(45,212,191,0.08);
+    --honey-bg: rgba(253,230,138,0.08);
+    --peach-bg: rgba(253,186,116,0.08);
+    --blush-bg: rgba(252,165,165,0.08);
+
+    --r-card: 20px;
+    --r-btn: 14px;
+    --r-device: 44px;
+    --gap: 16px;
+    --breathe: 48px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text1);
+    font-family: 'SF Pro Rounded', 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Utility ── */
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  /* ══════════════════════════════════════════
+     APP STORE HEADER
+     ══════════════════════════════════════════ */
+  .header {
+    padding: 56px 0 40px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .icon {
+    width: 120px; height: 120px;
+    border-radius: 27px;
+    background: linear-gradient(145deg, #0A0A0F 0%, #143432 40%, #2DD4BF 100%);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    box-shadow: 0 0 0 1px rgba(45,212,191,0.15);
+  }
+
+  .icon svg { width: 56px; height: 56px; opacity: 0.9; }
+
+  .meta h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+  }
+
+  .meta .sub {
+    font-size: 16px;
+    color: var(--text2);
+    margin-top: 2px;
+    font-weight: 400;
+  }
+
+  .meta .dev {
+    font-size: 14px;
+    color: var(--accent);
+    margin-top: 6px;
+  }
+
+  .actions { margin-top: 14px; display: flex; align-items: center; gap: 14px; }
+
+  .get-btn {
+    background: var(--accent);
+    color: #0A0A0F;
+    border: none;
+    padding: 7px 26px;
+    border-radius: 18px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    letter-spacing: -0.1px;
+  }
+
+  .price { color: var(--text3); font-size: 13px; }
+
+  /* ── Stats ── */
+  .stats {
+    display: flex;
+    border-top: 1px solid var(--surface-el);
+    border-bottom: 1px solid var(--surface-el);
+    padding: 18px 0;
+    margin-bottom: var(--breathe);
+  }
+
+  .stat {
+    flex: 1;
+    text-align: center;
+  }
+
+  .stat + .stat { border-left: 1px solid var(--surface-el); }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 500;
+  }
+
+  .stat-val {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 4px;
+    letter-spacing: -0.3px;
+  }
+
+  .stat-note {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 2px;
+  }
+
+  .stars { color: var(--peach); font-size: 11px; letter-spacing: 1px; }
+
+  /* ══════════════════════════════════════════
+     SCREENSHOT CAROUSEL
+     ══════════════════════════════════════════ */
+  .preview-label {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    letter-spacing: -0.2px;
+  }
+
+  .carousel {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    margin-bottom: var(--breathe);
+  }
+
+  .carousel::-webkit-scrollbar { display: none; }
+
+  /* ── iPhone Frame ── */
+  .iphone {
+    width: 260px; min-width: 260px; height: 546px;
+    background: var(--bg);
+    border-radius: 40px;
+    border: 3px solid #2A2A2E;
+    padding: 0;
+    position: relative;
+    scroll-snap-align: start;
+    overflow: hidden;
+  }
+
+  .notch {
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 110px; height: 26px;
+    background: var(--bg);
+    border-radius: 0 0 16px 16px;
+    z-index: 5;
+  }
+
+  .screen {
+    width: 100%; height: 100%;
+    border-radius: 37px;
+    overflow: hidden;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    padding: 0 0 0 0;
+  }
+
+  .status-bar {
+    height: 50px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text1);
+    flex-shrink: 0;
+  }
+
+  .s-title {
+    font-size: 22px;
+    font-weight: 700;
+    padding: 4px 20px 0;
+    letter-spacing: -0.3px;
+    flex-shrink: 0;
+  }
+
+  .s-body {
+    flex: 1;
+    padding: 0 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Tab bar */
+  .tabs {
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0 22px;
+    border-top: 0.5px solid rgba(255,255,255,0.06);
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(20px);
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    border-radius: 0 0 37px 37px;
+  }
+
+  .tab {
+    text-align: center;
+    font-size: 10px;
+    color: var(--text3);
+    line-height: 1.2;
+  }
+
+  .tab.on { color: var(--accent); }
+
+  .tab svg { display: block; margin: 0 auto 2px; width: 22px; height: 22px; }
+
+  /* ══════════════════════════════════════════
+     MODULE 2: DASHBOARD SCREEN
+     ══════════════════════════════════════════ */
+  .dash-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 60px;
+  }
+
+  .score-hero {
+    font-size: 80px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -3px;
+    cursor: pointer;
+  }
+
+  .level-label {
+    font-size: 18px;
+    font-weight: 500;
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  .confidence {
+    font-size: 12px;
+    color: var(--text3);
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .conf-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+
+  /* Factor reveal (shown in expanded state on one mockup) */
+  .factors-reveal {
+    width: 100%;
+    padding: 16px 0 0;
+  }
+
+  .factor-r {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+  }
+
+  .factor-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .factor-nm {
+    font-size: 14px;
+    color: var(--text2);
+    width: 80px;
+    flex-shrink: 0;
+  }
+
+  .factor-track {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .factor-fill {
+    height: 100%;
+    border-radius: 2px;
+  }
+
+  /* ══════════════════════════════════════════
+     MODULE 3a: HISTORY SCREEN
+     ══════════════════════════════════════════ */
+  .time-seg {
+    display: flex;
+    background: var(--surface);
+    border-radius: 9px;
+    padding: 2px;
+    margin-bottom: 16px;
+  }
+
+  .time-seg span {
+    flex: 1;
+    text-align: center;
+    padding: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text3);
+    border-radius: 7px;
+  }
+
+  .time-seg span.on {
+    background: var(--surface-el);
+    color: var(--text1);
+  }
+
+  .chart-box {
+    height: 120px;
+    position: relative;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .chart-zones {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chart-zones div {
+    flex: 1;
+  }
+
+  .chart-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .h-stats {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .h-stat {
+    flex: 1;
+    background: var(--surface);
+    border-radius: 14px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+
+  .h-stat-v {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .h-stat-l {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 2px;
+    font-weight: 500;
+  }
+
+  .h-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    font-size: 14px;
+  }
+
+  .h-row-date { color: var(--text2); }
+  .h-row-val { font-weight: 600; }
+
+  /* ══════════════════════════════════════════
+     MODULE 3b: WATCH SCREENS
+     ══════════════════════════════════════════ */
+  .watch {
+    width: 186px; min-width: 186px; height: 226px;
+    background: #1A1A1E;
+    border-radius: 46px;
+    border: 3px solid #333;
+    padding: 0;
+    position: relative;
+    scroll-snap-align: start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .crown {
+    position: absolute;
+    right: -7px; top: 50%;
+    transform: translateY(-50%);
+    width: 6px; height: 28px;
+    background: #444;
+    border-radius: 3px;
+  }
+
+  .w-screen {
+    width: calc(100% - 24px);
+    height: calc(100% - 24px);
+    border-radius: 38px;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 12px 10px;
+    overflow: hidden;
+  }
+
+  .w-title {
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--text3);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .w-ring-wrap {
+    position: relative;
+    width: 88px; height: 88px;
+    margin: 2px 0;
+  }
+
+  .w-ring-bg {
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    border: 6px solid rgba(255,255,255,0.05);
+  }
+
+  .w-ring-fg {
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    border: 6px solid transparent;
+    transform: rotate(-90deg);
+  }
+
+  .w-ring-center {
+    position: absolute; inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .w-score {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+
+  .w-label {
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 1px;
+  }
+
+  .w-factors {
+    width: 100%;
+    margin-top: 6px;
+  }
+
+  .w-factor {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 0;
+    font-size: 10px;
+    color: var(--text3);
+  }
+
+  .w-fdot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .w-fname { width: 32px; flex-shrink: 0; }
+
+  .w-fbar {
+    flex: 1; height: 3px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .w-ffill { height: 100%; border-radius: 2px; }
+
+  .w-time {
+    font-size: 9px;
+    color: var(--text3);
+    margin-top: auto;
+    padding-top: 4px;
+  }
+
+  /* ══════════════════════════════════════════
+     MODULE 4: DESCRIPTION + INFO
+     ══════════════════════════════════════════ */
+  .desc-section {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 48px;
+    margin-bottom: var(--breathe);
+  }
+
+  .desc-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    letter-spacing: -0.2px;
+  }
+
+  .desc-text {
+    font-size: 15px;
+    color: var(--text2);
+    line-height: 1.7;
+  }
+
+  .features {
+    list-style: none;
+    margin-top: 28px;
+  }
+
+  .features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--surface);
+  }
+
+  .f-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .f-icon svg { width: 18px; height: 18px; }
+
+  .f-text strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.1px;
+  }
+
+  .f-text span {
+    font-size: 13px;
+    color: var(--text3);
+    line-height: 1.4;
+  }
+
+  /* Info box */
+  .info-box {
+    background: var(--surface);
+    border-radius: var(--r-card);
+    padding: 24px;
+  }
+
+  .info-box h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .info-r {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-size: 14px;
+    border-bottom: 1px solid var(--surface-el);
+  }
+
+  .info-r:last-child { border: none; }
+  .info-r .il { color: var(--text3); }
+
+  /* ── Disclaimer ── */
+  .disclaimer {
+    border: 1px solid rgba(252,165,165,0.12);
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: var(--breathe);
+  }
+
+  .disclaimer svg { width: 20px; height: 20px; flex-shrink: 0; color: var(--blush); margin-top: 2px; }
+  .disclaimer p { font-size: 13px; color: var(--text3); line-height: 1.6; }
+  .disclaimer strong { color: var(--text2); }
+
+  /* ── Privacy ── */
+  .privacy-row {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 64px;
+  }
+
+  .priv-card {
+    flex: 1;
+    background: var(--surface);
+    border-radius: var(--r-card);
+    padding: 28px 20px;
+    text-align: center;
+  }
+
+  .priv-card svg { width: 28px; height: 28px; color: var(--text3); margin-bottom: 14px; }
+
+  .priv-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .priv-card p {
+    font-size: 13px;
+    color: var(--text3);
+    line-height: 1.5;
+  }
+
+  /* ── What's New ── */
+  .whats-new { margin-bottom: var(--breathe); }
+  .wn-ver { font-size: 13px; color: var(--text3); margin: 4px 0 14px; }
+  .wn-body { font-size: 14px; color: var(--text2); line-height: 1.8; }
+
+  /* ── Responsive ── */
+  @media (max-width: 700px) {
+    .header { flex-direction: column; text-align: center; }
+    .actions { justify-content: center; }
+    .desc-section { grid-template-columns: 1fr; }
+    .privacy-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- ═══ HEADER ═══ -->
+<header class="header">
+  <div class="icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2a7 7 0 0 1 7 7c0 3-1.5 5-3 6.5S14 18 14 20h-4c0-2-1.5-3.5-3-5S4 12 4 9a7 7 0 0 1 7-7h1z"/>
+      <path d="M10 20h4"/>
+      <path d="M10 22h4"/>
+      <circle cx="12" cy="9" r="2"/>
+    </svg>
+  </div>
+  <div class="meta">
+    <h1>Nopilepsy</h1>
+    <div class="sub">Seizure Risk Monitor</div>
+    <div class="dev">Itkovian-labs</div>
+    <div class="actions">
+      <button class="get-btn">GET</button>
+      <span class="price">Free</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ STATS ═══ -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-label">Rating</div>
+    <div class="stat-val">4.9</div>
+    <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Age</div>
+    <div class="stat-val">4+</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Category</div>
+    <div class="stat-val" style="font-size:15px">Health</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Size</div>
+    <div class="stat-val">12<span style="font-size:13px;font-weight:400"> MB</span></div>
+  </div>
+</div>
+
+<!-- ═══ SCREENSHOTS ═══ -->
+<div class="preview-label">Preview</div>
+<div class="carousel">
+
+  <!-- iPhone 1: Dashboard (collapsed — single number) -->
+  <div class="iphone">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="status-bar">9:41</div>
+      <div class="dash-center">
+        <div class="score-hero" style="color:var(--mint)">23</div>
+        <div class="level-label" style="color:var(--mint)">Low</div>
+        <div class="confidence">
+          <div class="conf-dot"></div>
+          87% sensors
+        </div>
+      </div>
+      <div class="tabs">
+        <div class="tab on">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          Now
+        </div>
+        <div class="tab">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12c2-3 4-6 6-3s4 6 6 3 4-6 6-3"/></svg>
+          History
+        </div>
+        <div class="tab">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          Profile
+        </div>
+        <div class="tab">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- iPhone 2: Dashboard (expanded — factors revealed) -->
+  <div class="iphone">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="status-bar">9:41</div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 20px 60px">
+        <div class="score-hero" style="color:var(--mint);font-size:56px">23</div>
+        <div class="level-label" style="color:var(--mint);font-size:15px">Low</div>
+        <div class="factors-reveal">
+          <div class="factor-r">
+            <div class="factor-dot" style="background:var(--peach)"></div>
+            <div class="factor-nm">Sleep</div>
+            <div class="factor-track"><div class="factor-fill" style="width:65%;background:var(--peach)"></div></div>
+          </div>
+          <div class="factor-r">
+            <div class="factor-dot" style="background:var(--honey)"></div>
+            <div class="factor-nm">HRV</div>
+            <div class="factor-track"><div class="factor-fill" style="width:40%;background:var(--honey)"></div></div>
+          </div>
+          <div class="factor-r">
+            <div class="factor-dot" style="background:var(--mint)"></div>
+            <div class="factor-nm">Heart Rate</div>
+            <div class="factor-track"><div class="factor-fill" style="width:25%;background:var(--mint)"></div></div>
+          </div>
+          <div class="factor-r">
+            <div class="factor-dot" style="background:var(--mint)"></div>
+            <div class="factor-nm">SpO2</div>
+            <div class="factor-track"><div class="factor-fill" style="width:15%;background:var(--mint)"></div></div>
+          </div>
+          <div class="factor-r">
+            <div class="factor-dot" style="background:var(--mint)"></div>
+            <div class="factor-nm">Activity</div>
+            <div class="factor-track"><div class="factor-fill" style="width:12%;background:var(--mint)"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="tabs">
+        <div class="tab on">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          Now
+        </div>
+        <div class="tab">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12c2-3 4-6 6-3s4 6 6 3 4-6 6-3"/></svg>
+          History
+        </div>
+        <div class="tab">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          Profile
+        </div>
+        <div class="tab">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- iPhone 3: History -->
+  <div class="iphone">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="status-bar">9:41</div>
+      <div class="s-title">History</div>
+      <div class="s-body">
+        <div class="time-seg">
+          <span class="on">Week</span>
+          <span>Month</span>
+          <span>3M</span>
+          <span>Year</span>
+        </div>
+        <div class="chart-box">
+          <div class="chart-zones">
+            <div style="background:rgba(252,165,165,0.03)"></div>
+            <div style="background:rgba(253,186,116,0.03)"></div>
+            <div style="background:rgba(253,230,138,0.03)"></div>
+            <div style="background:rgba(110,231,183,0.03)"></div>
+          </div>
+          <svg class="chart-svg" viewBox="0 0 220 120" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.15"/>
+                <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <filter id="glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <path d="M10,82 C30,86 25,88 45,86 C65,84 60,78 80,80 C100,82 95,74 115,68 C135,62 140,58 160,56 C180,54 185,52 195,54 C205,56 208,58 215,56 L215,120 L10,120 Z"
+              fill="url(#lineGrad)"/>
+            <path d="M10,82 C30,86 25,88 45,86 C65,84 60,78 80,80 C100,82 95,74 115,68 C135,62 140,58 160,56 C180,54 185,52 195,54 C205,56 208,58 215,56"
+              fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" opacity="0.5" filter="url(#glow)"/>
+          </svg>
+        </div>
+        <div class="h-stats">
+          <div class="h-stat">
+            <div class="h-stat-v" style="color:var(--mint)">28</div>
+            <div class="h-stat-l">Average</div>
+          </div>
+          <div class="h-stat">
+            <div class="h-stat-v" style="color:var(--honey)">45</div>
+            <div class="h-stat-l">Peak</div>
+          </div>
+          <div class="h-stat">
+            <div class="h-stat-v">42</div>
+            <div class="h-stat-l">Readings</div>
+          </div>
+        </div>
+        <div class="h-row">
+          <span class="h-row-date">Today, 8:12 AM</span>
+          <span class="h-row-val" style="color:var(--mint)">23</span>
+        </div>
+        <div class="h-row">
+          <span class="h-row-date">Yesterday</span>
+          <span class="h-row-val" style="color:var(--mint)">19</span>
+        </div>
+        <div class="h-row" style="border:none">
+          <span class="h-row-date">Apr 3</span>
+          <span class="h-row-val" style="color:var(--honey)">34</span>
+        </div>
+      </div>
+      <div class="tabs">
+        <div class="tab">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          Now
+        </div>
+        <div class="tab on">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12c2-3 4-6 6-3s4 6 6 3 4-6 6-3"/></svg>
+          History
+        </div>
+        <div class="tab">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          Profile
+        </div>
+        <div class="tab">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg>
+          Settings
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Watch 1: Low -->
+  <div class="watch">
+    <div class="crown"></div>
+    <div class="w-screen">
+      <div class="w-title">Nopilepsy</div>
+      <div class="w-ring-wrap">
+        <div class="w-ring-bg"></div>
+        <div class="w-ring-fg" style="border-top-color:var(--mint);border-right-color:var(--mint)"></div>
+        <div class="w-ring-center">
+          <div class="w-score" style="color:var(--mint)">23</div>
+          <div class="w-label" style="color:var(--mint)">Low</div>
+        </div>
+      </div>
+      <div class="w-factors">
+        <div class="w-factor">
+          <div class="w-fdot" style="background:var(--peach)"></div>
+          <span class="w-fname">Sleep</span>
+          <div class="w-fbar"><div class="w-ffill" style="width:65%;background:var(--peach)"></div></div>
+        </div>
+        <div class="w-factor">
+          <div class="w-fdot" style="background:var(--honey)"></div>
+          <span class="w-fname">HRV</span>
+          <div class="w-fbar"><div class="w-ffill" style="width:40%;background:var(--honey)"></div></div>
+        </div>
+        <div class="w-factor">
+          <div class="w-fdot" style="background:var(--mint)"></div>
+          <span class="w-fname">HR</span>
+          <div class="w-fbar"><div class="w-ffill" style="width:25%;background:var(--mint)"></div></div>
+        </div>
+      </div>
+      <div class="w-time">2m ago</div>
+    </div>
+  </div>
+
+  <!-- Watch 2: Elevated -->
+  <div class="watch">
+    <div class="crown"></div>
+    <div class="w-screen">
+      <div class="w-title">Nopilepsy</div>
+      <div class="w-ring-wrap">
+        <div class="w-ring-bg"></div>
+        <div class="w-ring-fg" style="border-top-color:var(--peach);border-right-color:var(--peach);border-bottom-color:var(--peach)"></div>
+        <div class="w-ring-center">
+          <div class="w-score" style="color:var(--peach)">62</div>
+          <div class="w-label" style="color:var(--peach)">Elevated</div>
+        </div>
+      </div>
+      <div class="w-factors">
+        <div class="w-factor">
+          <div class="w-fdot" style="background:var(--blush)"></div>
+          <span class="w-fname">Sleep</span>
+          <div class="w-fbar"><div class="w-ffill" style="width:90%;background:var(--blush)"></div></div>
+        </div>
+        <div class="w-factor">
+          <div class="w-fdot" style="background:var(--peach)"></div>
+          <span class="w-fname">Meds</span>
+          <div class="w-fbar"><div class="w-ffill" style="width:70%;background:var(--peach)"></div></div>
+        </div>
+        <div class="w-factor">
+          <div class="w-fdot" style="background:var(--honey)"></div>
+          <span class="w-fname">HRV</span>
+          <div class="w-fbar"><div class="w-ffill" style="width:50%;background:var(--honey)"></div></div>
+        </div>
+      </div>
+      <div class="w-time">just now</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ DISCLAIMER ═══ -->
+<div class="disclaimer">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+  <p><strong>Not a medical device.</strong> Risk assessments are informational, based on published research. Always consult your neurologist.</p>
+</div>
+
+<!-- ═══ DESCRIPTION ═══ -->
+<section class="desc-section">
+  <div>
+    <div class="desc-title">Description</div>
+    <div class="desc-text">
+      Passive seizure risk monitoring for Apple Watch. Reads your health sensors, shows one number. Tap to understand why.
+    </div>
+
+    <ul class="features">
+      <li>
+        <div class="f-icon" style="background:var(--mint-bg)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round"><path d="M2 12c2-3 4-6 6-3s4 6 6 3 4-6 6-3"/></svg>
+        </div>
+        <div class="f-text">
+          <strong>9-Factor Risk Engine</strong>
+          <span>Sleep, HRV, heart rate, SpO2, temperature, activity, ECG, stress, medication</span>
+        </div>
+      </li>
+      <li>
+        <div class="f-icon" style="background:rgba(10,132,255,0.1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#5AC8FA" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <div class="f-text">
+          <strong>Personal Baseline</strong>
+          <span>Learns your patterns over 14 days</span>
+        </div>
+      </li>
+      <li>
+        <div class="f-icon" style="background:rgba(175,130,255,0.1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#AF82FF" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <div class="f-text">
+          <strong>Research Citations</strong>
+          <span>Every weight links to published neurology research</span>
+        </div>
+      </li>
+      <li>
+        <div class="f-icon" style="background:var(--peach-bg)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--peach)" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+        </div>
+        <div class="f-text">
+          <strong>Medication Tracking</strong>
+          <span>Log doses, track adherence timing</span>
+        </div>
+      </li>
+      <li>
+        <div class="f-icon" style="background:var(--honey-bg)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--honey)" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="f-text">
+          <strong>Export for Your Doctor</strong>
+          <span>PDF and CSV with full history</span>
+        </div>
+      </li>
+      <li>
+        <div class="f-icon" style="background:rgba(255,255,255,0.04)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="f-text">
+          <strong>On-Device Only</strong>
+          <span>No cloud. No accounts. No tracking.</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div>
+    <div class="info-box">
+      <h3>Information</h3>
+      <div class="info-r"><span class="il">Provider</span><span>Itkovian-labs</span></div>
+      <div class="info-r"><span class="il">Size</span><span>12 MB</span></div>
+      <div class="info-r"><span class="il">Requires</span><span>iOS 17, watchOS 10</span></div>
+      <div class="info-r"><span class="il">Price</span><span>Free</span></div>
+      <div class="info-r"><span class="il">License</span><span>MIT</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ WHAT'S NEW ═══ -->
+<section class="whats-new">
+  <div class="desc-title">What's New</div>
+  <div class="wn-ver">Version 1.0.0</div>
+  <div class="wn-body">
+    First release. 9-factor hybrid risk engine, personal baseline learning,<br>
+    Apple Watch dashboard, trend history, PDF/CSV export, WidgetKit complications.
+  </div>
+</section>
+
+<!-- ═══ PRIVACY ═══ -->
+<div class="desc-title" style="margin-bottom:16px">App Privacy</div>
+<div class="privacy-row">
+  <div class="priv-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <h3>Data Not Collected</h3>
+    <p>All health data stays on your device.</p>
+  </div>
+  <div class="priv-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    <h3>No Tracking</h3>
+    <p>No analytics. No telemetry. No accounts.</p>
+  </div>
+  <div class="priv-card">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+    <h3>Open Source</h3>
+    <p>MIT license. Verify every line yourself.</p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,252 @@
+# seed-design.yaml — Nopilepsy Design Redesign
+# Generated: 2026-04-05
+# Interview ambiguity: 0.12
+# Ouroboros version: 0.1
+
+meta:
+  name: nopilepsy-design
+  description: >
+    Redesign Nopilepsy's SwiftUI app screens and App Store preview page
+    from "AI spreadsheet" to calm, minimal Apple Health aesthetic.
+  version: 0.2.0
+  type: brownfield
+  parent_seed: seed.yaml
+
+goal: >
+  Transform Nopilepsy into a visually minimal, calm health app that
+  shows a single large number on the dashboard. Tap to reveal details.
+  Soft pastel risk colors on near-black background. SF Pro Rounded
+  typography. Zero emoji. Maximum whitespace. Feels like Apple Health
+  meets a premium wellness app.
+
+constraints:
+  - Dark mode primary (#0A0A0F near-black background)
+  - SF Pro Rounded for all typography
+  - SF Symbols only — zero Unicode emoji, zero custom illustration
+  - Soft pastel palette — Mint/Honey/Peach/Blush (personalizable)
+  - Apple Health / Fitness+ design language as north star
+  - App Store listing format (not marketing landing page)
+  - 5 screenshots in device frames
+  - Ultra concise copy — 3-4 lines max in description
+  - Must work on iPhone AND Apple Watch
+  - All existing functionality preserved — design only, no feature changes
+
+# ── DESIGN SYSTEM ──
+
+design_system:
+  colors:
+    background: "#0A0A0F"
+    surface: "#141418"
+    surface_elevated: "#1E1E24"
+    text_primary: "#F5F5F7"
+    text_secondary: "#8E8E93"
+    text_tertiary: "#48484A"
+    accent: "#6EE7B7"  # Mint — default accent
+
+    risk_levels:
+      low:
+        primary: "#6EE7B7"       # Mint
+        background: "rgba(110, 231, 183, 0.08)"
+      moderate:
+        primary: "#FDE68A"       # Honey
+        background: "rgba(253, 230, 138, 0.08)"
+      elevated:
+        primary: "#FDBA74"       # Peach
+        background: "rgba(253, 186, 116, 0.08)"
+      high:
+        primary: "#FCA5A5"       # Blush
+        background: "rgba(252, 165, 165, 0.08)"
+
+  typography:
+    family: "SF Pro Rounded"
+    hero_score: "72pt bold"     # The single big number
+    section_title: "22pt semibold"
+    body: "16pt regular"
+    caption: "13pt regular"
+    watch_score: "36pt bold"
+
+  spacing:
+    page_margin: 24
+    section_gap: 48
+    card_padding: 20
+    element_gap: 16
+    breathing_room: 32  # extra whitespace between major sections
+
+  radius:
+    card: 20
+    button: 14
+    device_frame: 44
+
+# ── MODULES ──
+
+modules:
+  - name: design-tokens
+    description: >
+      CSS custom properties and SwiftUI color/typography constants
+      implementing the design system above.
+    responsibilities:
+      - Define all color variables (pastel palette)
+      - Define typography scale (SF Pro Rounded)
+      - Define spacing scale
+      - Support personalizable risk colors
+    interfaces:
+      provides:
+        - CSS :root variables for preview page
+        - SwiftUI Color/Font extensions for app
+      requires: []
+    build_order: 1
+
+  - name: dashboard-screen
+    description: >
+      Hero screen showing only a single large risk score number
+      centered on screen. Tap the score to reveal contributing
+      factors with a smooth expand animation. Nothing else visible
+      by default — just the number, its color, and the risk label.
+    responsibilities:
+      - Render score as 72pt SF Pro Rounded bold, centered
+      - Color the number using soft pastel for current risk level
+      - Show risk label ("Low") in smaller text below
+      - Tap triggers expand animation revealing factor breakdown
+      - Collapse animation returns to single number
+      - Minimal confidence indicator (subtle opacity ring or text)
+    interfaces:
+      provides:
+        - DashboardView (SwiftUI)
+        - Dashboard screenshot for preview
+      requires:
+        - design-tokens
+    build_order: 2
+
+  - name: history-screen
+    description: >
+      Clean trend visualization with generous whitespace.
+      Soft risk-zone bands behind a thin line chart.
+      Three stat cards below. No list clutter.
+    responsibilities:
+      - Time range picker (Week/Month/3M/Year)
+      - Line chart with pastel-colored data points
+      - Risk zone backgrounds at 0.04 opacity (barely visible)
+      - Three stat cards (Average, Peak, Count) with large numbers
+      - Recent assessments as minimal rows
+    interfaces:
+      provides:
+        - HistoryView (SwiftUI)
+        - History screenshot for preview
+      requires:
+        - design-tokens
+    build_order: 3
+
+  - name: watch-screens
+    description: >
+      Watchos dashboard following same philosophy — big score,
+      minimal factors below. Clean ring gauge.
+    responsibilities:
+      - Large centered score (36pt)
+      - Thin ring gauge (not chunky)
+      - Top 3 factors as small dots with thin bars
+      - Minimal typography throughout
+    interfaces:
+      provides:
+        - WatchDashboardView (SwiftUI)
+        - Two watch screenshots for preview (Low + Elevated)
+      requires:
+        - design-tokens
+    build_order: 3
+
+  - name: preview-page
+    description: >
+      App Store listing page rebuilt with the new design system.
+      Near-black background, SF Symbols instead of emoji,
+      massive whitespace, 5 device mockups, ultra concise copy.
+    responsibilities:
+      - App icon + title + GET button header
+      - Stats row (rating, category, size)
+      - 5 screenshots in device frames (3 iPhone + 2 Watch)
+      - Ultra concise description (3-4 lines)
+      - Feature list with SF Symbol SVG icons (no emoji)
+      - Information box
+      - Privacy cards
+      - Medical disclaimer
+    interfaces:
+      provides:
+        - preview/index.html
+      requires:
+        - design-tokens
+        - Screenshots from dashboard, history, watch modules
+    build_order: 4
+
+# ── ACCEPTANCE TESTS ──
+
+acceptance_tests:
+  - id: DT-001
+    criterion: Zero Unicode emoji anywhere in the preview page
+    given: Preview page is loaded
+    when: Page source is searched for emoji unicode ranges
+    then: Zero matches found
+    module: preview-page
+
+  - id: DT-002
+    criterion: Dashboard shows only score number by default
+    given: Dashboard screen is displayed with a risk assessment
+    when: User views the screen without interaction
+    then: Only the score number, risk label, and subtle confidence indicator are visible. No factors, no bars, no charts
+    module: dashboard-screen
+
+  - id: DT-003
+    criterion: Tap score reveals factors with animation
+    given: Dashboard shows the single score
+    when: User taps the score
+    then: Factor breakdown slides/fades in below the score. Tapping again collapses it
+    module: dashboard-screen
+
+  - id: DT-004
+    criterion: Risk colors use soft pastel palette
+    given: Any risk level is displayed
+    when: Comparing displayed color to design spec
+    then: Low=#6EE7B7, Moderate=#FDE68A, Elevated=#FDBA74, High=#FCA5A5
+    module: design-tokens
+
+  - id: DT-005
+    criterion: Background is near-black not true black
+    given: Any screen is displayed
+    when: Background color is inspected
+    then: Background is #0A0A0F, not #000000
+    module: design-tokens
+
+  - id: DT-006
+    criterion: Preview page has 5 device mockups
+    given: Preview page is loaded
+    when: Device frames are counted
+    then: 3 iPhone frames + 2 Watch frames are present
+    module: preview-page
+
+  - id: DT-007
+    criterion: Description text is ultra concise
+    given: Preview page description section
+    when: Word count is measured
+    then: Description body is under 40 words
+    module: preview-page
+
+  - id: DT-008
+    criterion: Icons are SF Symbols (SVG) not emoji
+    given: Preview page feature list
+    when: Icons are inspected
+    then: All icons are inline SVG paths from SF Symbols, not Unicode characters
+    module: preview-page
+
+risks:
+  - description: SF Symbols are Apple-proprietary — can't use actual SF Symbol font in web HTML
+    mitigation: Use SVG icon paths that visually match SF Symbols. Cite as "inspired by"
+    severity: medium
+
+  - description: Soft pastels on dark background may have contrast issues (WCAG)
+    mitigation: Test all pastel colors against #0A0A0F for 4.5:1 contrast ratio. Brighten if needed
+    severity: medium
+
+  - description: "Single big number" dashboard may feel empty to new users
+    mitigation: Show a subtle onboarding hint on first launch explaining tap-to-expand
+    severity: low
+
+open_questions:
+  - What specific SF Symbol names for each feature icon? (will pick during build)
+  - Should the personalizable colors be a settings page or a long-press gesture?

@@ -1,0 +1,68 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Build and upload to App Store Connect"
+  lane :release do
+    setup_ci if ENV['CI']
+
+    # Match handles certificates and provisioning profiles
+    match(
+      type: "appstore",
+      app_identifier: ["com.nopilepsy.app", "com.nopilepsy.app.watchkitapp"],
+      readonly: is_ci
+    )
+
+    # Generate Xcode project from project.yml
+    sh("brew install xcodegen || true")
+    sh("cd .. && xcodegen generate")
+
+    # Build and archive
+    build_app(
+      project: "Nopilepsy.xcodeproj",
+      scheme: "Nopilepsy",
+      configuration: "Release",
+      export_method: "app-store",
+      destination: "generic/platform=iOS",
+      clean: true,
+      output_directory: "./build",
+      output_name: "Nopilepsy.ipa"
+    )
+
+    # Upload to App Store Connect
+    upload_to_app_store(
+      skip_metadata: false,
+      skip_screenshots: true,
+      force: true,
+      precheck_include_in_app_purchases: false,
+      submit_for_review: false,
+      automatic_release: false
+    )
+  end
+
+  desc "Build and upload to TestFlight"
+  lane :beta do
+    setup_ci if ENV['CI']
+
+    match(
+      type: "appstore",
+      app_identifier: ["com.nopilepsy.app", "com.nopilepsy.app.watchkitapp"],
+      readonly: is_ci
+    )
+
+    sh("brew install xcodegen || true")
+    sh("cd .. && xcodegen generate")
+
+    build_app(
+      project: "Nopilepsy.xcodeproj",
+      scheme: "Nopilepsy",
+      configuration: "Release",
+      export_method: "app-store",
+      destination: "generic/platform=iOS",
+      clean: true
+    )
+
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true
+    )
+  end
+end

@@ -1,0 +1,1 @@
+Initial release. 9-factor hybrid risk engine, personal baseline learning, Apple Watch dashboard, trend history, medication tracking, PDF/CSV export.

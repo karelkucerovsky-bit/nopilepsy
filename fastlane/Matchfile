@@ -1,0 +1,7 @@
+# Match stores certificates + provisioning profiles in a private git repo
+# This avoids manual certificate management entirely
+
+git_url(ENV["MATCH_GIT_URL"] || "https://github.com/karelkucerovsky-bit/nopilepsy-certs.git")
+storage_mode("git")
+type("appstore")
+app_identifier(["com.nopilepsy.app", "com.nopilepsy.app.watchkitapp"])
